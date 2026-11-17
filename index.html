@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Misi Bijak Ayat - Flashcard Digital Bahasa Melayu</title>
+    <!-- Fon mesra kanak-kanak yang bulat dan jelas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================================================
+           PEMBOLEH UBAH WARNA & TEMA PASTEL CERIA
+           ========================================================================== */
+        :root {
+            --biru-langit: #E0F4FF;
+            --biru-utama: #38BDF8;
+            --biru-gelap: #0284C7;
+            --kuning-cerah: #FEF08A;
+            --kuning-utama: #FACC15;
+            --kuning-gelap: #CA8A04;
+            --hijau-pastel: #DCFCE7;
+            --hijau-utama: #4ADE80;
+            --hijau-gelap: #15803D;
+            --merah-jambu: #FCE7F3;
+            --merah-jambu-utama: #F472B6;
+            --merah-jambu-gelap: #BE185D;
+            --ungu-pastel: #F3E8FF;
+            --ungu-utama: #C084FC;
+            --ungu-gelap: #7E22CE;
+            --oren-salah: #EA580C;
+            --merah-salah: #DC2626;
+            --merah-latar: #FEE2E2;
+            --teks-utama: #1E293B;
+            --teks-sekunder: #475569;
+            --putih: #FFFFFF;
+            --bayang-kad: 0 12px 28px rgba(14, 116, 144, 0.14);
+            --bayang-butang: 0 5px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Fredoka', 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #BAE6FD 0%, #E0F2FE 45%, #FEF9C3 100%);
+            color: var(--teks-utama);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ==========================================================================
+           ELEMEN HIASAN LATAR BELAKANG (AWAN, PELANGI, BINTANG, GEOMETRI)
+           ========================================================================== */
+        .latar-hiasan {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .awan {
+            position: absolute;
+            opacity: 0.85;
+            animation: terapungAwan 22s linear infinite;
+        }
+        .awan-1 { top: 4%; left: -10%; width: 160px; animation-duration: 32s; }
+        .awan-2 { top: 14%; right: -12%; width: 190px; animation-duration: 38s; animation-direction: reverse; }
+        .awan-3 { bottom: 12%; left: 5%; width: 140px; animation-duration: 28s; }
+
+        .bintang-hiasan {
+            position: absolute;
+            animation: berkelip 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes terapungAwan {
+            0% { transform: translateX(-20px); }
+            50% { transform: translateX(40px); }
+            100% { transform: translateX(-20px); }
+        }
+
+        @keyframes berkelip {
+            0% { transform: scale(0.85) rotate(0deg); opacity: 0.6; }
+            100% { transform: scale(1.15) rotate(15deg); opacity: 1; }
+        }
+
+        @keyframes melantunComel {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* ==========================================================================
+           BEKAS UTAMA APLIKASI
+           ========================================================================== */
+        .bekas-utama {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 920px;
+            padding: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .paparan {
+            display: none;
+            width: 100%;
+            animation: munculPaparan 0.35s ease-out;
+        }
+
+        .paparan.aktif {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes munculPaparan {
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ==========================================================================
+           GAYA BUTANG KARTUN 3D MESRA KANAK-KANAK
+           ========================================================================== */
+        .butang {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 1.15rem;
+            padding: 14px 24px;
+            border: 3px solid #FFFFFF;
+            border-radius: 22px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.15s ease;
+            text-align: center;
+            user-select: none;
+        }
+
+        .butang:hover {
+            filter: brightness(1.04);
+            transform: translateY(-2px);
+        }
+
+        .butang:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .butang-biru {
+            background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%);
+            color: #FFFFFF;
+            box-shadow: 0 6px 0 #0369A1;
+        }
+
+        .butang-hijau {
+            background: linear-gradient(180deg, #4ADE80 0%, #16A34A 100%);
+            color: #FFFFFF;
+            box-shadow: 0 6px 0 #15803D;
+        }
+
+        .butang-kuning {
+            background: linear-gradient(180deg, #FDE047 0%, #EAB308 100%);
+            color: #422006;
+            box-shadow: 0 6px 0 #A16207;
+        }
+
+        .butang-merah-jambu {
+            background: linear-gradient(180deg, #F472B6 0%, #DB2777 100%);
+            color: #FFFFFF;
+            box-shadow: 0 6px 0 #9D174D;
+        }
+
+        .butang-ungu {
+            background: linear-gradient(180deg, #C084FC 0%, #9333EA 100%);
+            color: #FFFFFF;
+            box-shadow: 0 6px 0 #6B21A8;
+        }
+
+        .butang-putih {
+            background: #FFFFFF;
+            color: var(--teks-utama);
+            border: 3px solid #CBD5E1;
+            box-shadow: 0 5px 0 #94A3B8;
+        }
+
+        .butang-kecil {
+            font-size: 0.98rem;
+            padding: 10px 16px;
+            border-radius: 16px;
+        }
+
+        /* ==========================================================================
+           HALAMAN UTAMA
+           ========================================================================== */
+        .kad-utama {
+            background: rgba(255, 255, 255, 0.94);
+            border: 5px solid #FFFFFF;
+            border-radius: 36px;
+            padding: 28px 24px 34px;
+            width: 100%;
+            max-width: 720px;
+            text-align: center;
+            box-shadow: var(--bayang-kad);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pelangi-atas {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            opacity: 0.85;
+            pointer-events: none;
+        }
+
+        .lencana-tajuk {
+            display: inline-block;
+            background: var(--kuning-cerah);
+            color: var(--kuning-gelap);
+            border: 2px solid var(--kuning-utama);
+            padding: 6px 18px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-top: 26px;
+            margin-bottom: 10px;
+        }
+
+        .tajuk-besar {
+            font-size: clamp(2.1rem, 6vw, 3.3rem);
+            font-weight: 700;
+            color: #0284C7;
+            text-shadow: 3px 3px 0 #BAE6FD;
+            letter-spacing: 1px;
+            line-height: 1.15;
+            margin-bottom: 8px;
+        }
+
+        .slogan-utama {
+            font-size: clamp(1.1rem, 3vw, 1.35rem);
+            color: #BE185D;
+            font-weight: 700;
+            background: var(--merah-jambu);
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-bottom: 18px;
+        }
+
+        .pentas-watak-utama {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 12px;
+            margin: 8px auto 22px;
+            animation: melantunComel 3.2s ease-in-out infinite;
+        }
+
+        .grid-menu-utama {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            max-width: 540px;
+            margin: 0 auto;
+        }
+
+        .grid-menu-utama .butang {
+            width: 100%;
+            font-size: 1.2rem;
+            padding: 16px 18px;
+        }
+
+        /* ==========================================================================
+           PILIH KATEGORI
+           ========================================================================== */
+        .bekas-kategori {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 32px;
+            padding: 24px;
+            width: 100%;
+            box-shadow: var(--bayang-kad);
+            border: 4px solid #FFFFFF;
+        }
+
+        .kepala-bahagian {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .tajuk-bahagian {
+            font-size: 1.75rem;
+            color: var(--ungu-gelap);
+        }
+
+        .senarai-kategori {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 14px;
+        }
+
+        .kad-pilihan-kategori {
+            background: #F8FAFC;
+            border: 3px solid #E2E8F0;
+            border-radius: 24px;
+            padding: 18px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .kad-pilihan-kategori:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .kat-1 { background: #EFF6FF; border-color: #93C5FD; }
+        .kat-2 { background: #F0FDF4; border-color: #86EFAC; }
+        .kat-3 { background: #FEFCE8; border-color: #FDE047; }
+        .kat-4 { background: #FAF5FF; border-color: #D8B4FE; }
+        .kat-5 { background: #FDF2F8; border-color: #F9A8D4; }
+        .kat-semua { background: linear-gradient(135deg, #E0F2FE 0%, #FCE7F3 100%); border-color: #38BDF8; }
+
+        .nombor-kat {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: #FFFFFF;
+            color: var(--teks-utama);
+            width: fit-content;
+        }
+
+        .nama-kat {
+            font-size: 1.18rem;
+            font-weight: 700;
+            color: var(--teks-utama);
+            line-height: 1.3;
+        }
+
+        .bilangan-kad-kat {
+            font-size: 0.92rem;
+            color: var(--teks-sekunder);
+            font-weight: 600;
+        }
+
+        /* ==========================================================================
+           PAPARAN PEMBELAJARAN FLASHCARD (3D FLIP)
+           ========================================================================== */
+        .bar-atas-kad {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.92);
+            padding: 12px 18px;
+            border-radius: 24px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            margin-bottom: 14px;
+        }
+
+        .info-kemajuan {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .teks-kemajuan {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 0.98rem;
+            margin-bottom: 6px;
+            color: var(--biru-gelap);
+        }
+
+        .landasan-kemajuan {
+            width: 100%;
+            height: 14px;
+            background: #E2E8F0;
+            border-radius: 999px;
+            overflow: hidden;
+            border: 2px solid #FFFFFF;
+        }
+
+        .isi-kemajuan {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #38BDF8, #4ADE80, #FACC15);
+            border-radius: 999px;
+            transition: width 0.35s ease;
+        }
+
+        .alat-kawalan-atas {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Bekas Perspektif 3D */
+        .pentas-kad-3d {
+            width: 100%;
+            perspective: 1400px;
+            margin-bottom: 16px;
+        }
+
+        .kad-interaktif {
+            width: 100%;
+            min-height: 410px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+
+        .kad-interaktif.diterbalikkan {
+            transform: rotateY(180deg);
+        }
+
+        .muka-kad {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            min-height: 410px;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 34px;
+            padding: 24px 26px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: var(--bayang-kad);
+            border: 6px solid #FFFFFF;
+        }
+
+        /* Bahagian Hadapan Kad */
+        .kad-hadapan {
+            background: linear-gradient(160deg, #FFFFFF 0%, #FFF7ED 100%);
+        }
+
+        /* Bahagian Belakang Kad */
+        .kad-belakang {
+            background: linear-gradient(160deg, #FFFFFF 0%, #F0FDF4 100%);
+            transform: rotateY(180deg);
+        }
+
+        /* Pastikan muka aktif menentukan tinggi sekiranya kandungan panjang di skrin kecil */
+        .kad-interaktif.posisi-relatif-hadapan .kad-hadapan {
+            position: relative;
+        }
+        .kad-interaktif.posisi-relatif-belakang .kad-belakang {
+            position: relative;
+        }
+
+        .kepala-kad {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-kategori-kad {
+            background: var(--ungu-pastel);
+            color: var(--ungu-gelap);
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: 2px solid #E9D5FF;
+        }
+
+        .lencana-status-kad {
+            padding: 6px 14px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.92rem;
+        }
+
+        .status-salah {
+            background: var(--merah-latar);
+            color: var(--merah-salah);
+            border: 2px solid #FCA5A5;
+        }
+
+        .status-betul {
+            background: var(--hijau-pastel);
+            color: var(--hijau-gelap);
+            border: 2px solid #86EFAC;
+        }
+
+        .kandungan-tengah-kad {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin: 14px 0;
+            gap: 14px;
+        }
+
+        .kotak-ayat-salah {
+            background: #FFF1F2;
+            border: 3px dashed #FB7185;
+            border-radius: 24px;
+            padding: 20px 22px;
+            width: 100%;
+            font-size: clamp(1.35rem, 3.6vw, 1.85rem);
+            font-weight: 700;
+            line-height: 1.45;
+            color: var(--teks-utama);
+        }
+
+        .serlah-salah {
+            color: #DC2626;
+            background: #FEE2E2;
+            padding: 2px 10px;
+            border-radius: 10px;
+            text-decoration: underline wavy #EA580C;
+            text-underline-offset: 5px;
+        }
+
+        .soalan-kad {
+            font-size: 1.18rem;
+            font-weight: 700;
+            color: #C2410C;
+            background: #FFEDD5;
+            padding: 8px 18px;
+            border-radius: 18px;
+        }
+
+        .kotak-ayat-betul {
+            background: #ECFDF5;
+            border: 3px solid #34D399;
+            border-radius: 24px;
+            padding: 16px 20px;
+            width: 100%;
+            font-size: clamp(1.3rem, 3.4vw, 1.75rem);
+            font-weight: 700;
+            line-height: 1.45;
+            color: var(--teks-utama);
+        }
+
+        .serlah-betul {
+            color: #15803D;
+            background: #DCFCE7;
+            padding: 2px 10px;
+            border-radius: 10px;
+            border-bottom: 3px solid #16A34A;
+        }
+
+        .kotak-penerangan {
+            background: #EFF6FF;
+            border: 2px solid #93C5FD;
+            border-radius: 20px;
+            padding: 14px 18px;
+            width: 100%;
+            text-align: left;
+            font-size: 1.05rem;
+            line-height: 1.5;
+            color: #1E3A8A;
+        }
+
+        .kotak-contoh-tambahan {
+            background: #FEFCE8;
+            border: 2px solid #FDE047;
+            border-radius: 18px;
+            padding: 12px 18px;
+            width: 100%;
+            text-align: left;
+            font-size: 1.02rem;
+            color: #713F12;
+        }
+
+        .kaki-kad {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .petunjuk-sentuh {
+            font-size: 0.92rem;
+            color: var(--teks-sekunder);
+            font-weight: 600;
+        }
+
+        .bar-navigasi-bawah {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* ==========================================================================
+           PAPARAN KUIZ MINI
+           ========================================================================== */
+        .bekas-kuiz {
+            background: rgba(255, 255, 255, 0.96);
+            border: 5px solid #FFFFFF;
+            border-radius: 34px;
+            padding: 24px;
+            width: 100%;
+            box-shadow: var(--bayang-kad);
+        }
+
+        .kepala-kuiz {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 3px dashed #E2E8F0;
+        }
+
+        .lencana-markah {
+            background: var(--kuning-cerah);
+            border: 2px solid var(--kuning-utama);
+            color: #854D0E;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 18px;
+            font-size: 1.1rem;
+        }
+
+        .soalan-kuiz-kotak {
+            background: #F0F9FF;
+            border: 3px solid #7DD3FC;
+            border-radius: 24px;
+            padding: 18px 20px;
+            margin-bottom: 18px;
+        }
+
+        .arahan-soalan-kuiz {
+            font-size: 1.05rem;
+            color: var(--biru-gelap);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .ayat-rujukan-kuiz {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #DC2626;
+            background: #FFF1F2;
+            padding: 10px 14px;
+            border-radius: 14px;
+            border: 2px dashed #FDA4AF;
+        }
+
+        .senarai-pilihan-kuiz {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .butang-pilihan {
+            width: 100%;
+            text-align: left;
+            background: #FFFFFF;
+            border: 3px solid #CBD5E1;
+            border-radius: 20px;
+            padding: 14px 18px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.12rem;
+            font-weight: 600;
+            color: var(--teks-utama);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.15s ease;
+            box-shadow: 0 4px 0 #CBD5E1;
+        }
+
+        .butang-pilihan:hover:not(:disabled) {
+            background: #F8FAFC;
+            border-color: var(--biru-utama);
+            transform: translateY(-2px);
+        }
+
+        .butang-pilihan:disabled {
+            cursor: default;
+        }
+
+        .huruf-pilihan {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--biru-langit);
+            color: var(--biru-gelap);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .pilihan-betul {
+            background: #DCFCE7 !important;
+            border-color: #22C55E !important;
+            box-shadow: 0 4px 0 #16A34A !important;
+            color: #14532D !important;
+        }
+
+        .pilihan-betul .huruf-pilihan {
+            background: #22C55E;
+            color: #FFFFFF;
+        }
+
+        .pilihan-salah {
+            background: #FEE2E2 !important;
+            border-color: #EF4444 !important;
+            box-shadow: 0 4px 0 #DC2626 !important;
+            color: #7F1D1D !important;
+        }
+
+        .pilihan-salah .huruf-pilihan {
+            background: #EF4444;
+            color: #FFFFFF;
+        }
+
+        .maklum-balas-kuiz {
+            display: none;
+            border-radius: 22px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            font-size: 1.08rem;
+            line-height: 1.45;
+            animation: munculPaparan 0.25s ease;
+        }
+
+        .maklum-balas-kuiz.betul {
+            display: block;
+            background: #DCFCE7;
+            border: 3px solid #4ADE80;
+            color: #14532D;
+        }
+
+        .maklum-balas-kuiz.salah {
+            display: block;
+            background: #FEF2F2;
+            border: 3px solid #F87171;
+            color: #7F1D1D;
+        }
+
+        /* Keputusan Akhir Kuiz */
+        .keputusan-kuiz {
+            text-align: center;
+            padding: 16px 8px;
+        }
+
+        .paparan-skor-besar {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--biru-gelap);
+            background: var(--biru-langit);
+            display: inline-block;
+            padding: 14px 34px;
+            border-radius: 28px;
+            border: 4px solid var(--biru-utama);
+            margin: 12px 0;
+        }
+
+        .kata-galakan {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--merah-jambu-gelap);
+            margin-bottom: 8px;
+        }
+
+        /* ==========================================================================
+           MODAL / TETINGKAP PANDUAN & MESEJ
+           ========================================================================== */
+        .lapisan-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .lapisan-modal.terbuka {
+            display: flex;
+            animation: munculPaparan 0.25s ease;
+        }
+
+        .kotak-modal {
+            background: #FFFFFF;
+            border-radius: 32px;
+            border: 5px solid var(--kuning-utama);
+            max-width: 560px;
+            width: 100%;
+            padding: 26px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .langkah-panduan {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            border-radius: 20px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        .nombor-langkah {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--biru-utama);
+            color: #FFFFFF;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* ==========================================================================
+           RESPONSIF TELEFON PINTAR & TABLET
+           ========================================================================== */
+        @media (max-width: 640px) {
+            .grid-menu-utama {
+                grid-template-columns: 1fr;
+            }
+            .muka-kad {
+                padding: 18px 16px;
+                min-height: 380px;
+            }
+            .butang {
+                padding: 12px 18px;
+                font-size: 1.05rem;
+            }
+            .bar-navigasi-bawah .butang {
+                flex: 1 1 45%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ELEMEN LATAR BELAKANG CERIA (AWAN & BINTANG SVG) -->
+    <div class="latar-hiasan" aria-hidden="true">
+        <!-- Awan 1 -->
+        <svg class="awan awan-1" viewBox="0 0 200 100" fill="none">
+            <path d="M45 80H155C174.33 80 190 64.33 190 45C190 27.2 176.7 12.5 159.5 10.3C152.1 4.1 142.5 0 132 0C114.2 0 98.9 10.6 92.2 25.8C86.9 22.8 80.7 21 74 21C54.7 21 39 36.7 39 56C39 57.5 39.1 59 39.3 60.4C22.9 62.6 10 76.6 10 93.5" fill="white"/>
+            <ellipse cx="100" cy="62" rx="82" ry="26" fill="white"/>
+            <circle cx="65" cy="46" r="28" fill="white"/>
+            <circle cx="105" cy="36" r="34" fill="white"/>
+            <circle cx="142" cy="48" r="25" fill="white"/>
+        </svg>
+        <!-- Awan 2 -->
+        <svg class="awan awan-2" viewBox="0 0 200 100" fill="none">
+            <ellipse cx="100" cy="64" rx="85" ry="25" fill="white"/>
+            <circle cx="60" cy="48" r="26" fill="white"/>
+            <circle cx="102" cy="38" r="32" fill="white"/>
+            <circle cx="144" cy="48" r="26" fill="white"/>
+        </svg>
+        <!-- Bintang-bintang kecil -->
+        <svg class="bintang-hiasan" style="top: 8%; left: 12%; width: 34px;" viewBox="0 0 50 50">
+            <polygon points="25,2 31,18 48,18 34,28 39,45 25,35 11,45 16,28 2,18 19,18" fill="#FACC15"/>
+        </svg>
+        <svg class="bintang-hiasan" style="top: 18%; right: 14%; width: 28px; animation-delay: 1s;" viewBox="0 0 50 50">
+            <polygon points="25,2 31,18 48,18 34,28 39,45 25,35 11,45 16,28 2,18 19,18" fill="#F472B6"/>
+        </svg>
+        <svg class="bintang-hiasan" style="bottom: 10%; right: 10%; width: 36px; animation-delay: 1.5s;" viewBox="0 0 50 50">
+            <polygon points="25,2 31,18 48,18 34,28 39,45 25,35 11,45 16,28 2,18 19,18" fill="#4ADE80"/>
+        </svg>
+        <svg class="bintang-hiasan" style="bottom: 16%; left: 10%; width: 30px; animation-delay: 0.5s;" viewBox="0 0 50 50">
+            <polygon points="25,2 31,18 48,18 34,28 39,45 25,35 11,45 16,28 2,18 19,18" fill="#C084FC"/>
+        </svg>
+    </div>
+
+    <main class="bekas-utama">
+
+        <!-- ======================================================================
+             1. HALAMAN UTAMA
+             ====================================================================== -->
+        <section id="paparan-utama" class="paparan aktif" aria-label="Halaman Utama">
+            <div class="kad-utama">
+                <!-- Hiasan Pelangi SVG -->
+                <svg class="pelangi-atas" viewBox="0 0 300 110" fill="none" aria-hidden="true">
+                    <path d="M20 110 A 130 130 0 0 1 280 110" stroke="#FCA5A5" stroke-width="14" stroke-linecap="round"/>
+                    <path d="M36 110 A 114 114 0 0 1 264 110" stroke="#FDE047" stroke-width="14" stroke-linecap="round"/>
+                    <path d="M52 110 A 98 98 0 0 1 248 110" stroke="#86EFAC" stroke-width="14" stroke-linecap="round"/>
+                    <path d="M68 110 A 82 82 0 0 1 232 110" stroke="#7DD3FC" stroke-width="14" stroke-linecap="round"/>
+                    <path d="M84 110 A 66 66 0 0 1 216 110" stroke="#D8B4FE" stroke-width="14" stroke-linecap="round"/>
+                </svg>
+
+                <div class="lencana-tajuk">🌟 BAHASA MELAYU SEKOLAH RENDAH 🌟</div>
+                <h1 class="tajuk-besar">MISI BIJAK AYAT</h1>
+                <p class="slogan-utama">Jom Kenal Pasti dan Betulkan Kesalahan Ayat!</p>
+
+                <!-- Watak Kartun Comel Memegang Buku Bahasa Melayu -->
+                <div class="pentas-watak-utama">
+                    <!-- Watak Arnab Kecil -->
+                    <svg width="86" height="115" viewBox="0 0 120 150" aria-label="Watak Arnab Comel">
+                        <ellipse cx="42" cy="36" rx="12" ry="32" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+                        <ellipse cx="42" cy="36" rx="6" ry="22" fill="#FBCFE8"/>
+                        <ellipse cx="78" cy="36" rx="12" ry="32" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+                        <ellipse cx="78" cy="36" rx="6" ry="22" fill="#FBCFE8"/>
+                        <circle cx="60" cy="84" r="38" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+                        <circle cx="46" cy="78" r="5" fill="#1E293B"/>
+                        <circle cx="74" cy="78" r="5" fill="#1E293B"/>
+                        <circle cx="48" cy="76" r="1.8" fill="#FFFFFF"/>
+                        <circle cx="76" cy="76" r="1.8" fill="#FFFFFF"/>
+                        <ellipse cx="36" cy="90" rx="7" ry="4" fill="#F9A8D4" opacity="0.7"/>
+                        <ellipse cx="84" cy="90" rx="7" ry="4" fill="#F9A8D4" opacity="0.7"/>
+                        <polygon points="56,86 64,86 60,91" fill="#F472B6"/>
+                        <path d="M53 94 Q60 101 67 94" stroke="#1E293B" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <rect x="34" y="114" width="52" height="30" rx="14" fill="#A7F3D0" stroke="#34D399" stroke-width="3"/>
+                    </svg>
+
+                    <!-- Watak Utama Beruang Memegang Buku Bahasa Melayu -->
+                    <svg width="150" height="150" viewBox="0 0 180 175" aria-label="Watak Beruang Memegang Buku Bahasa Melayu">
+                        <!-- Telinga -->
+                        <circle cx="46" cy="42" r="20" fill="#D97706" stroke="#92400E" stroke-width="4"/>
+                        <circle cx="46" cy="42" r="10" fill="#FDE68A"/>
+                        <circle cx="134" cy="42" r="20" fill="#D97706" stroke="#92400E" stroke-width="4"/>
+                        <circle cx="134" cy="42" r="10" fill="#FDE68A"/>
+                        <!-- Kepala -->
+                        <circle cx="90" cy="76" r="52" fill="#F59E0B" stroke="#92400E" stroke-width="4"/>
+                        <!-- Muncung -->
+                        <ellipse cx="90" cy="90" rx="22" ry="16" fill="#FEF3C7"/>
+                        <ellipse cx="90" cy="84" rx="8" ry="5" fill="#451A03"/>
+                        <path d="M80 95 Q90 104 100 95" stroke="#451A03" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                        <!-- Mata -->
+                        <circle cx="68" cy="68" r="6.5" fill="#1E293B"/>
+                        <circle cx="112" cy="68" r="6.5" fill="#1E293B"/>
+                        <circle cx="70" cy="66" r="2.2" fill="#FFFFFF"/>
+                        <circle cx="114" cy="66" r="2.2" fill="#FFFFFF"/>
+                        <!-- Pipi -->
+                        <ellipse cx="54" cy="82" rx="8" ry="5" fill="#FB7185" opacity="0.65"/>
+                        <ellipse cx="126" cy="82" rx="8" ry="5" fill="#FB7185" opacity="0.65"/>
+                        <!-- Buku Bahasa Melayu -->
+                        <rect x="34" y="108" width="112" height="60" rx="10" fill="#0284C7" stroke="#0369A1" stroke-width="4"/>
+                        <rect x="42" y="114" width="96" height="48" rx="6" fill="#38BDF8"/>
+                        <text x="90" y="135" text-anchor="middle" fill="#FFFFFF" font-family="Fredoka, sans-serif" font-weight="700" font-size="14">BUKU</text>
+                        <text x="90" y="152" text-anchor="middle" fill="#FEF08A" font-family="Fredoka, sans-serif" font-weight="700" font-size="13">BAHASA MELAYU</text>
+                        <!-- Tangan memegang buku -->
+                        <circle cx="34" cy="136" r="13" fill="#F59E0B" stroke="#92400E" stroke-width="3.5"/>
+                        <circle cx="146" cy="136" r="13" fill="#F59E0B" stroke="#92400E" stroke-width="3.5"/>
+                    </svg>
+
+                    <!-- Watak Kucing Comel -->
+                    <svg width="86" height="115" viewBox="0 0 120 150" aria-label="Watak Kucing Comel">
+                        <polygon points="26,56 34,20 56,46" fill="#FDBA74" stroke="#EA580C" stroke-width="4" stroke-linejoin="round"/>
+                        <polygon points="94,56 86,20 64,46" fill="#FDBA74" stroke="#EA580C" stroke-width="4" stroke-linejoin="round"/>
+                        <circle cx="60" cy="82" r="38" fill="#FED7AA" stroke="#EA580C" stroke-width="4"/>
+                        <circle cx="46" cy="76" r="5" fill="#1E293B"/>
+                        <circle cx="74" cy="76" r="5" fill="#1E293B"/>
+                        <circle cx="48" cy="74" r="1.8" fill="#FFFFFF"/>
+                        <circle cx="76" cy="74" r="1.8" fill="#FFFFFF"/>
+                        <polygon points="56,84 64,84 60,89" fill="#FB7185"/>
+                        <path d="M52 92 Q60 99 68 92" stroke="#1E293B" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <line x1="20" y1="82" x2="34" y2="84" stroke="#9A3412" stroke-width="2.5" stroke-linecap="round"/>
+                        <line x1="86" y1="84" x2="100" y2="82" stroke="#9A3412" stroke-width="2.5" stroke-linecap="round"/>
+                        <rect x="34" y="114" width="52" height="30" rx="14" fill="#DDD6FE" stroke="#8B5CF6" stroke-width="3"/>
+                    </svg>
+                </div>
+
+                <!-- 4 Butang Utama -->
+                <div class="grid-menu-utama">
+                    <button type="button" class="butang butang-hijau" onclick="mulaBelajarSemua()">
+                        <span>🚀</span> MULA BELAJAR
+                    </button>
+                    <button type="button" class="butang butang-kuning" onclick="bukaPanduan()">
+                        <span>📖</span> CARA BERMAIN
+                    </button>
+                    <button type="button" class="butang butang-biru" onclick="tunjukPaparan('paparan-kategori')">
+                        <span>🗂️</span> PILIH KATEGORI
+                    </button>
+                    <button type="button" class="butang butang-merah-jambu" onclick="mulaKuiz()">
+                        <span>🏆</span> KUIZ MINI
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================================
+             2. HALAMAN PILIH KATEGORI
+             ====================================================================== -->
+        <section id="paparan-kategori" class="paparan" aria-label="Pilih Kategori">
+            <div class="bekas-kategori">
+                <div class="kepala-bahagian">
+                    <h2 class="tajuk-bahagian">🗂️ Pilih Kategori Misi</h2>
+                    <button type="button" class="butang butang-putih butang-kecil" onclick="tunjukPaparan('paparan-utama')">
+                        🏠 KEMBALI
+                    </button>
+                </div>
+
+                <div class="senarai-kategori" id="senarai-kategori-grid">
+                    <!-- Dijana secara automatik oleh JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================================
+             3. HALAMAN PEMBELAJARAN FLASHCARD INTERAKTIF
+             ====================================================================== -->
+        <section id="paparan-kad" class="paparan" aria-label="Ruang Belajar Flashcard">
+            <!-- Bar Kemajuan & Kawalan Atas -->
+            <div class="bar-atas-kad">
+                <div class="info-kemajuan">
+                    <div class="teks-kemajuan">
+                        <span id="label-nombor-kad">Kad 1 / 30</span>
+                        <span id="label-dipelajari">Dipelajari: 0 / 30</span>
+                    </div>
+                    <div class="landasan-kemajuan">
+                        <div class="isi-kemajuan" id="bar-kemajuan-isi"></div>
+                    </div>
+                </div>
+
+                <div class="alat-kawalan-atas">
+                    <button type="button" class="butang butang-ungu butang-kecil" onclick="acakSusunanKad()" title="Susun kad secara rawak">
+                        🔀 ACAK KAD
+                    </button>
+                    <button type="button" class="butang butang-kuning butang-kecil" onclick="ulangKadSemasa()" title="Ulang semula set kad ini">
+                        🔄 ULANG
+                    </button>
+                    <button type="button" class="butang butang-putih butang-kecil" onclick="tunjukPaparan('paparan-utama')">
+                        🏠 KEMBALI
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kad Interaktif 3D Flip -->
+            <div class="pentas-kad-3d">
+                <div id="kad-interaktif" class="kad-interaktif posisi-relatif-hadapan" onclick="terbalikkanKad()">
+                    
+                    <!-- BAHAGIAN HADAPAN KAD -->
+                    <div class="muka-kad kad-hadapan">
+                        <div class="kepala-kad">
+                            <span class="tag-kategori-kad" id="kad-kategori-hadapan">Kategori 1</span>
+                            <span class="lencana-status-kad status-salah">❌ AYAT SALAH</span>
+                        </div>
+
+                        <div class="kandungan-tengah-kad">
+                            <div class="kotak-ayat-salah" id="teks-ayat-salah">
+                                <!-- Ayat salah dengan sorotan merah -->
+                            </div>
+                            <div class="soalan-kad">
+                                🤔 Bolehkah kamu mencari kesalahan ayat ini?
+                            </div>
+                        </div>
+
+                        <div class="kaki-kad">
+                            <!-- Watak Kartun Sedang Berfikir -->
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <svg width="64" height="64" viewBox="0 0 100 100" aria-label="Watak Kucing Berfikir">
+                                    <polygon points="22,42 28,14 46,34" fill="#FDBA74" stroke="#EA580C" stroke-width="3.5"/>
+                                    <polygon points="78,42 72,14 54,34" fill="#FDBA74" stroke="#EA580C" stroke-width="3.5"/>
+                                    <circle cx="50" cy="60" r="30" fill="#FED7AA" stroke="#EA580C" stroke-width="3.5"/>
+                                    <circle cx="40" cy="54" r="4" fill="#1E293B"/>
+                                    <circle cx="60" cy="54" r="4" fill="#1E293B"/>
+                                    <path d="M44 68 Q50 65 56 68" stroke="#1E293B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                                    <!-- Tanda soal berfikir -->
+                                    <text x="80" y="28" fill="#EA580C" font-family="Fredoka, sans-serif" font-weight="700" font-size="22">?</text>
+                                </svg>
+                                <span class="petunjuk-sentuh">Sentuh kad atau tekan butang jawapan</span>
+                            </div>
+
+                            <button type="button" class="butang butang-biru" onclick="event.stopPropagation(); terbalikkanKad();">
+                                💡 LIHAT JAWAPAN
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- BAHAGIAN BELAKANG KAD -->
+                    <div class="muka-kad kad-belakang">
+                        <div class="kepala-kad">
+                            <span class="tag-kategori-kad" id="kad-kategori-belakang">Kategori 1</span>
+                            <span class="lencana-status-kad status-betul">✅ AYAT BETUL</span>
+                        </div>
+
+                        <div class="kandungan-tengah-kad">
+                            <div class="kotak-ayat-betul" id="teks-ayat-betul">
+                                <!-- Ayat betul dengan sorotan hijau -->
+                            </div>
+
+                            <div class="kotak-penerangan" id="teks-penerangan">
+                                <!-- Penerangan ringkas tatabahasa -->
+                            </div>
+
+                            <div class="kotak-contoh-tambahan" id="teks-contoh-tambahan">
+                                <!-- Contoh ayat tambahan yang betul -->
+                            </div>
+                        </div>
+
+                        <div class="kaki-kad">
+                            <!-- Watak Kartun Gembira Bersorak -->
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <svg width="64" height="64" viewBox="0 0 100 100" aria-label="Watak Beruang Gembira">
+                                    <circle cx="26" cy="28" r="12" fill="#D97706" stroke="#92400E" stroke-width="3"/>
+                                    <circle cx="74" cy="28" r="12" fill="#D97706" stroke="#92400E" stroke-width="3"/>
+                                    <circle cx="50" cy="56" r="32" fill="#F59E0B" stroke="#92400E" stroke-width="3.5"/>
+                                    <ellipse cx="50" cy="64" rx="14" ry="10" fill="#FEF3C7"/>
+                                    <path d="M35 48 Q40 42 45 48" stroke="#1E293B" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                    <path d="M55 48 Q60 42 65 48" stroke="#1E293B" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                    <path d="M42 66 Q50 75 58 66" stroke="#451A03" stroke-width="3" fill="none" stroke-linecap="round"/>
+                                    <text x="82" y="25" fill="#16A34A" font-size="18">★</text>
+                                </svg>
+                                <span class="petunjuk-sentuh" style="color: #15803D;">Bagus! Teruskan ke kad seterusnya.</span>
+                            </div>
+
+                            <button type="button" class="butang butang-kuning butang-kecil" onclick="event.stopPropagation(); terbalikkanKad();">
+                                🔄 PUSING SEMULA
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Bar Butang Navigasi Bawah -->
+            <div class="bar-navigasi-bawah">
+                <button type="button" class="butang butang-putih" id="butang-sebelum" onclick="kadSebelumnya()">
+                    ⬅️ KAD SEBELUMNYA
+                </button>
+                <button type="button" class="butang butang-hijau" id="butang-seterusnya" onclick="kadSeterusnya()">
+                    KAD SETERUSNYA ➡️
+                </button>
+                <button type="button" class="butang butang-merah-jambu" id="butang-tamat-ke-kuiz" style="display: none;" onclick="mulaKuiz()">
+                    🏆 MULA KUIZ MINI
+                </button>
+            </div>
+        </section>
+
+        <!-- ======================================================================
+             4. HALAMAN KUIZ MINI PENGUKUHAN
+             ====================================================================== -->
+        <section id="paparan-kuiz" class="paparan" aria-label="Kuiz Mini">
+            <div class="bekas-kuiz">
+                <div class="kepala-kuiz">
+                    <div>
+                        <h2 style="color: var(--merah-jambu-gelap); font-size: 1.55rem;">🏆 Kuiz Mini Bijak Ayat</h2>
+                        <span id="status-soalan-kuiz" style="font-weight: 700; color: var(--teks-sekunder);">Soalan 1 daripada 10</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="lencana-markah" id="paparan-markah-semasa">Markah: 0</div>
+                        <button type="button" class="butang butang-putih butang-kecil" onclick="tunjukPaparan('paparan-utama')">
+                            🏠 KEMBALI
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bahagian Soalan Aktif -->
+                <div id="ruang-soalan-kuiz">
+                    <div class="soalan-kuiz-kotak">
+                        <div class="arahan-soalan-kuiz">Pilih ayat yang BETUL bagi membetulkan ayat di bawah:</div>
+                        <div class="ayat-rujukan-kuiz" id="kuiz-ayat-salah">
+                            <!-- Ayat salah -->
+                        </div>
+                    </div>
+
+                    <div class="senarai-pilihan-kuiz" id="senarai-pilihan-jawapan">
+                        <!-- 4 pilihan jawapan dijana oleh JS -->
+                    </div>
+
+                    <div id="maklum-balas-kuiz" class="maklum-balas-kuiz">
+                        <!-- Maklum balas segera -->
+                    </div>
+
+                    <div style="text-align: right;">
+                        <button type="button" class="butang butang-biru" id="butang-soalan-seterusnya" style="display: none;" onclick="soalanKuizSeterusnya()">
+                            SOALAN SETERUSNYA ➡️
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bahagian Keputusan Akhir Kuiz -->
+                <div id="ruang-keputusan-kuiz" class="keputusan-kuiz" style="display: none;">
+                    <div id="ikon-ganjaran-kuiz" style="font-size: 3.5rem; margin-bottom: 6px;">🌟🌟🌟</div>
+                    <div class="kata-galakan" id="teks-kata-galakan">Hebat!</div>
+                    <p style="font-size: 1.15rem; color: var(--teks-sekunder); font-weight: 600;">Kamu telah berjaya menamatkan Kuiz Mini Misi Bijak Ayat!</p>
+                    <div class="paparan-skor-besar" id="skor-akhir-kuiz">100 / 100</div>
+                    <p id="ulasan-skor-kuiz" style="font-size: 1.1rem; margin-bottom: 22px; font-weight: 600;"></p>
+
+                    <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+                        <button type="button" class="butang butang-hijau" onclick="mulaKuiz()">
+                            🔄 ULANG KUIZ
+                        </button>
+                        <button type="button" class="butang butang-biru" onclick="tunjukPaparan('paparan-utama')">
+                            🏠 MENU UTAMA
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================================================
+         MODAL CARA BERMAIN (MESRA KANAK-KANAK)
+         ========================================================================== -->
+    <div id="modal-panduan" class="lapisan-modal" role="dialog" aria-modal="true" aria-labelledby="tajuk-panduan">
+        <div class="kotak-modal">
+            <h2 id="tajuk-panduan" style="color: var(--biru-gelap); font-size: 1.8rem; margin-bottom: 14px;">📖 Cara Bermain</h2>
+            
+            <div class="langkah-panduan">
+                <div class="nombor-langkah">1</div>
+                <div>
+                    <strong>Baca Ayat Salah:</strong> Perhatikan perkataan yang berwarna <span style="color: #DC2626; font-weight: 700;">merah</span> di bahagian hadapan kad.
+                </div>
+            </div>
+
+            <div class="langkah-panduan">
+                <div class="nombor-langkah">2</div>
+                <div>
+                    <strong>Fikirkan Jawapan:</strong> Cuba teka mengapa ayat itu salah dan bagaimana cara membetulkannya.
+                </div>
+            </div>
+
+            <div class="langkah-panduan">
+                <div class="nombor-langkah">3</div>
+                <div>
+                    <strong>Pusingkan Kad:</strong> Tekan pada kad atau butang <strong>LIHAT JAWAPAN</strong> untuk melihat pembetulan berwarna <span style="color: #15803D; font-weight: 700;">hijau</span> dan penerangannya.
+                </div>
+            </div>
+
+            <div class="langkah-panduan">
+                <div class="nombor-langkah">4</div>
+                <div>
+                    <strong>Jawab Kuiz Mini:</strong> Selepas habis belajar, uji kepintaran kamu dengan menjawab 10 soalan kuiz!
+                </div>
+            </div>
+
+            <button type="button" class="butang butang-hijau" style="margin-top: 10px; width: 100%;" onclick="tutupPanduan()">
+                👍 SAYA FAHAM!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           1. PANGKALAN DATA 30 KAD FLASHCARD (TATABAHASA STANDARD DBP)
+           Setiap kategori mempunyai 6 kad yang lengkap dengan sorotan dan penerangan.
+           ========================================================================== */
+        const DATA_KATEGORI = [
+            {
+                id: 1,
+                kod: "kat-1",
+                nama: "KATEGORI 1: KESALAHAN PENGGUNAAN KATA",
+                ikon: "✏️",
+                peneranganRingkas: "Memilih perkataan dan penjodoh bilangan yang tepat mengikut konteks ayat."
+            },
+            {
+                id: 2,
+                kod: "kat-2",
+                nama: "KATEGORI 2: KESALAHAN KATA SENDI NAMA",
+                ikon: "🧭",
+                peneranganRingkas: "Penggunaan tepat kata sendi seperti di, ke, dari, daripada, pada, dan kepada."
+            },
+            {
+                id: 3,
+                kod: "kat-3",
+                nama: "KATEGORI 3: KESALAHAN KATA HUBUNG",
+                ikon: "🔗",
+                peneranganRingkas: "Menggabungkan klausa dengan kata hubung yang sesuai tanpa lewah."
+            },
+            {
+                id: 4,
+                kod: "kat-4",
+                nama: "KATEGORI 4: KESALAHAN STRUKTUR AYAT",
+                ikon: "🧱",
+                peneranganRingkas: "Susunan subjek, predikat, dan ayat pasif yang gramatis."
+            },
+            {
+                id: 5,
+                kod: "kat-5",
+                nama: "KATEGORI 5: KESALAHAN KATA GANDA DAN KATA PENGUAT",
+                ikon: "⭐",
+                peneranganRingkas: "Mengelakkan penggandaan jamak dan penguat berganda yang salah."
+            }
+        ];
+
+        const SENARAI_KAD = [
+            // --- KATEGORI 1: KESALAHAN PENGGUNAAN KATA (6 KAD) ---
+            {
+                id: 1, kategoriId: 1,
+                ayatSalahHTML: 'Ali <span class="serlah-salah">sangat</span> pandai <span class="serlah-salah">sekali</span>.',
+                ayatSalahTeks: 'Ali sangat pandai sekali.',
+                ayatBetulHTML: 'Ali <span class="serlah-betul">sangat pandai</span>.',
+                ayatBetulTeks: 'Ali sangat pandai.',
+                penerangan: 'Kata penguat "sangat" dan "sekali" tidak boleh digunakan serentak dalam satu ayat. Pilih salah satu sahaja.',
+                contohTambahan: 'Bunga mawar di taman itu sangat cantik. (Atau: cantik sekali).'
+            },
+            {
+                id: 2, kategoriId: 1,
+                ayatSalahHTML: '<span class="serlah-salah">Mereka-mereka</span> sedang bermain bola di padang.',
+                ayatSalahTeks: 'Mereka-mereka sedang bermain bola di padang.',
+                ayatBetulHTML: '<span class="serlah-betul">Mereka</span> sedang bermain bola di padang.',
+                ayatBetulTeks: 'Mereka sedang bermain bola di padang.',
+                penerangan: 'Perkataan "mereka" sudah membawa maksud ramai (jamak), jadi tidak boleh digandakan menjadi "mereka-mereka".',
+                contohTambahan: 'Mereka sedang beratur sebelum masuk ke dalam kelas.'
+            },
+            {
+                id: 3, kategoriId: 1,
+                ayatSalahHTML: 'Ibu membeli lima <span class="serlah-salah">biji</span> pisang goreng di gerai itu.',
+                ayatSalahTeks: 'Ibu membeli lima biji pisang goreng di gerai itu.',
+                ayatBetulHTML: 'Ibu membeli lima <span class="serlah-betul">keping</span> pisang goreng di gerai itu.',
+                ayatBetulTeks: 'Ibu membeli lima keping pisang goreng di gerai itu.',
+                penerangan: 'Penjodoh bilangan bagi pisang goreng yang telah dipotong dan digoreng ialah "keping", manakala "biji" untuk buah pisang yang belum dipotong.',
+                contohTambahan: 'Adik makan tiga keping pisang goreng yang masih panas.'
+            },
+            {
+                id: 4, kategoriId: 1,
+                ayatSalahHTML: 'Abang sedang <span class="serlah-salah">menggoreng</span> air di dapur.',
+                ayatSalahTeks: 'Abang sedang menggoreng air di dapur.',
+                ayatBetulHTML: 'Abang sedang <span class="serlah-betul">menjerang</span> air di dapur.',
+                ayatBetulTeks: 'Abang sedang menjerang air di dapur.',
+                penerangan: 'Perbuatan memasak air di dalam cerek atau periuk menggunakan kata kerja "menjerang", bukan "menggoreng".',
+                contohTambahan: 'Kakak menjerang air untuk membancuh teh susu.'
+            },
+            {
+                id: 5, kategoriId: 1,
+                ayatSalahHTML: 'Ayah menghadiahkan ibu <span class="serlah-salah">sebatang</span> rantai emas.',
+                ayatSalahTeks: 'Ayah menghadiahkan ibu sebatang rantai emas.',
+                ayatBetulHTML: 'Ayah menghadiahkan ibu <span class="serlah-betul">seutas</span> rantai emas.',
+                ayatBetulTeks: 'Ayah menghadiahkan ibu seutas rantai emas.',
+                penerangan: 'Penjodoh bilangan untuk benda yang panjang dan boleh dilentur seperti rantai, tali, dan jam tangan ialah "seutas".',
+                contohTambahan: 'Nenek memakai seutas rantai mutiara pada majlis itu.'
+            },
+            {
+                id: 6, kategoriId: 1,
+                ayatSalahHTML: 'Murid-murid <span class="serlah-salah">saling bantu-membantu</span> membersihkan kelas.',
+                ayatSalahTeks: 'Murid-murid saling bantu-membantu membersihkan kelas.',
+                ayatBetulHTML: 'Murid-murid <span class="serlah-betul">saling membantu</span> membersihkan kelas.',
+                ayatBetulTeks: 'Murid-murid saling membantu membersihkan kelas.',
+                penerangan: 'Perkataan "saling" sudah membawa maksud berbalasan, jadi tidak boleh diikuti oleh kata ganda berimbuhan seperti "bantu-membantu".',
+                contohTambahan: 'Kita hendaklah saling menghormati antara satu sama lain.'
+            },
+
+            // --- KATEGORI 2: KESALAHAN KATA SENDI NAMA (6 KAD) ---
+            {
+                id: 7, kategoriId: 2,
+                ayatSalahHTML: 'Saya berasal <span class="serlah-salah">daripada</span> Tampin, Negeri Sembilan.',
+                ayatSalahTeks: 'Saya berasal daripada Tampin, Negeri Sembilan.',
+                ayatBetulHTML: 'Saya berasal <span class="serlah-betul">dari</span> Tampin, Negeri Sembilan.',
+                ayatBetulTeks: 'Saya berasal dari Tampin, Negeri Sembilan.',
+                penerangan: 'Kata sendi nama "dari" digunakan untuk menunjukkan tempat, arah, dan masa. "Daripada" pula untuk orang, asal kejadian, dan perbandingan.',
+                contohTambahan: 'Puan Salmah baru pulang dari pejabat pos.'
+            },
+            {
+                id: 8, kategoriId: 2,
+                ayatSalahHTML: 'Buku cerita itu ada <span class="serlah-salah">di</span> Cikgu Amina.',
+                ayatSalahTeks: 'Buku cerita itu ada di Cikgu Amina.',
+                ayatBetulHTML: 'Buku cerita itu ada <span class="serlah-betul">pada</span> Cikgu Amina.',
+                ayatBetulTeks: 'Buku cerita itu ada pada Cikgu Amina.',
+                penerangan: 'Kata sendi nama "pada" digunakan di hadapan kata nama yang merujuk kepada manusia atau haiwan, manakala "di" hanya untuk tempat.',
+                contohTambahan: 'Pensel warna milik saya ada pada adik.'
+            },
+            {
+                id: 9, kategoriId: 2,
+                ayatSalahHTML: 'Baju kurung moden itu diperbuat <span class="serlah-salah">dari</span> kain sutera.',
+                ayatSalahTeks: 'Baju kurung moden itu diperbuat dari kain sutera.',
+                ayatBetulHTML: 'Baju kurung moden itu diperbuat <span class="serlah-betul">daripada</span> kain sutera.',
+                ayatBetulTeks: 'Baju kurung moden itu diperbuat daripada kain sutera.',
+                penerangan: 'Kata sendi nama "daripada" mesti digunakan untuk menyatakan punca atau bahan asal sesuatu benda itu dibuat.',
+                contohTambahan: 'Kerusi rotan di ruang tamu itu diperbuat daripada rotan asli.'
+            },
+            {
+                id: 10, kategoriId: 2,
+                ayatSalahHTML: 'Surat jemputan itu diterima <span class="serlah-salah">dari</span> pihak sekolah.',
+                ayatSalahTeks: 'Surat jemputan itu diterima dari pihak sekolah.',
+                ayatBetulHTML: 'Surat jemputan itu diterima <span class="serlah-betul">daripada</span> pihak sekolah.',
+                ayatBetulTeks: 'Surat jemputan itu diterima daripada pihak sekolah.',
+                penerangan: 'Kata sendi nama "daripada" digunakan apabila menyatakan punca yang datang daripada manusia, organisasi, atau institusi.',
+                contohTambahan: 'Hadiah kemenangan itu diterima daripada Guru Besar.'
+            },
+            {
+                id: 11, kategoriId: 2,
+                ayatSalahHTML: 'Mereka sedang berbincang <span class="serlah-salah">mengenai tentang</span> lawatan sekolah.',
+                ayatSalahTeks: 'Mereka sedang berbincang mengenai tentang lawatan sekolah.',
+                ayatBetulHTML: 'Mereka sedang berbincang <span class="serlah-betul">tentang</span> lawatan sekolah.',
+                ayatBetulTeks: 'Mereka sedang berbincang tentang lawatan sekolah.',
+                penerangan: 'Perkataan "mengenai" dan "tentang" mempunyai maksud yang sama. Gunakan kata sendi nama "tentang" sahaja supaya tidak lewah.',
+                contohTambahan: 'Cikgu bercerita tentang kepentingan menjaga kebersihan diri.'
+            },
+            {
+                id: 12, kategoriId: 2,
+                ayatSalahHTML: 'Raju menghantar buku latihan itu <span class="serlah-salah">ke</span> Cikgu Lim.',
+                ayatSalahTeks: 'Raju menghantar buku latihan itu ke Cikgu Lim.',
+                ayatBetulHTML: 'Raju menghantar buku latihan itu <span class="serlah-betul">kepada</span> Cikgu Lim.',
+                ayatBetulTeks: 'Raju menghantar buku latihan itu kepada Cikgu Lim.',
+                penerangan: 'Kata sendi nama "kepada" digunakan untuk sasaran yang merujuk kepada manusia, manakala "ke" digunakan untuk tempat atau arah.',
+                contohTambahan: 'Ayah memberikan wang saku kepada kakak setiap pagi.'
+            },
+
+            // --- KATEGORI 3: KESALAHAN KATA HUBUNG (6 KAD) ---
+            {
+                id: 13, kategoriId: 3,
+                ayatSalahHTML: '<span class="serlah-salah">Walaupun</span> hujan <span class="serlah-salah">tetapi</span> mereka tetap bermain.',
+                ayatSalahTeks: 'Walaupun hujan tetapi mereka tetap bermain.',
+                ayatBetulHTML: '<span class="serlah-betul">Walaupun</span> hujan, mereka tetap bermain.',
+                ayatBetulTeks: 'Walaupun hujan, mereka tetap bermain.',
+                penerangan: 'Kata hubung "walaupun" dan "tetapi" tidak boleh digunakan bersama dalam satu ayat kerana kedua-duanya membawa maksud pertentangan.',
+                contohTambahan: 'Walaupun berasa penat, Siti tetap menyiapkan kerja sekolahnya.'
+            },
+            {
+                id: 14, kategoriId: 3,
+                ayatSalahHTML: 'Dia rajin <span class="serlah-salah">kerana</span> dia selalu mendapat keputusan yang baik.',
+                ayatSalahTeks: 'Dia rajin kerana dia selalu mendapat keputusan yang baik.',
+                ayatBetulHTML: 'Dia rajin <span class="serlah-betul">dan</span> selalu mendapat keputusan yang baik.',
+                ayatBetulTeks: 'Dia rajin dan selalu mendapat keputusan yang baik.',
+                penerangan: 'Kata hubung "kerana" menyatakan sebab, bukan akibat. Dalam ayat ini, "dan" lebih tepat untuk menggabungkan dua sifat positif.',
+                contohTambahan: 'Aiman mendapat keputusan yang cemerlang kerana dia rajin mengulang kaji.'
+            },
+            {
+                id: 15, kategoriId: 3,
+                ayatSalahHTML: '<span class="serlah-salah">Oleh kerana</span> hujan lebat, kami tidak dapat keluar bermain.',
+                ayatSalahTeks: 'Oleh kerana hujan lebat, kami tidak dapat keluar bermain.',
+                ayatBetulHTML: '<span class="serlah-betul">Oleh sebab</span> hujan lebat, kami tidak dapat keluar bermain.',
+                ayatBetulTeks: 'Oleh sebab hujan lebat, kami tidak dapat keluar bermain.',
+                penerangan: 'Dalam tatabahasa Bahasa Melayu standard, bentuk yang betul ialah "oleh sebab", bukannya "oleh kerana".',
+                contohTambahan: 'Oleh sebab bangun lewat, Hafiz tertinggal bas sekolah.'
+            },
+            {
+                id: 16, kategoriId: 3,
+                ayatSalahHTML: 'Ibu memasak di dapur <span class="serlah-salah">tetapi</span> mendengar radio.',
+                ayatSalahTeks: 'Ibu memasak di dapur tetapi mendengar radio.',
+                ayatBetulHTML: 'Ibu memasak di dapur <span class="serlah-betul">sambil</span> mendengar radio.',
+                ayatBetulTeks: 'Ibu memasak di dapur sambil mendengar radio.',
+                penerangan: 'Kata hubung "sambil" digunakan untuk menunjukkan dua perbuatan yang dilakukan secara serentak pada masa yang sama.',
+                contohTambahan: 'Adik menyanyi dengan gembira sambil melukis gambar bunga.'
+            },
+            {
+                id: 17, kategoriId: 3,
+                ayatSalahHTML: 'Zara suka membaca buku <span class="serlah-salah">kerana</span> adiknya suka melukis.',
+                ayatSalahTeks: 'Zara suka membaca buku kerana adiknya suka melukis.',
+                ayatBetulHTML: 'Zara suka membaca buku <span class="serlah-betul">manakala</span> adiknya suka melukis.',
+                ayatBetulTeks: 'Zara suka membaca buku manakala adiknya suka melukis.',
+                penerangan: 'Kata hubung "manakala" digunakan untuk membandingkan atau membezakan dua perkara atau hobi yang berlainan.',
+                contohTambahan: 'Abang bermain badminton manakala kakak bermain bola jaring.'
+            },
+            {
+                id: 18, kategoriId: 3,
+                ayatSalahHTML: 'Murid-murid berdiri tegak <span class="serlah-salah">supaya</span> lagu Negaraku dinyanyikan.',
+                ayatSalahTeks: 'Murid-murid berdiri tegak supaya lagu Negaraku dinyanyikan.',
+                ayatBetulHTML: 'Murid-murid berdiri tegak <span class="serlah-betul">ketika</span> lagu Negaraku dinyanyikan.',
+                ayatBetulTeks: 'Murid-murid berdiri tegak ketika lagu Negaraku dinyanyikan.',
+                penerangan: 'Kata hubung "ketika" (atau semasa) menunjukkan waktu sesuatu peristiwa berlaku, manakala "supaya" menunjukkan tujuan.',
+                contohTambahan: 'Kita mesti senyap ketika guru sedang mengajar di hadapan kelas.'
+            },
+
+            // --- KATEGORI 4: KESALAHAN STRUKTUR AYAT (6 KAD) ---
+            {
+                id: 19, kategoriId: 4,
+                ayatSalahHTML: '<span class="serlah-salah">Ke sekolah Ali pergi</span> setiap hari.',
+                ayatSalahTeks: 'Ke sekolah Ali pergi setiap hari.',
+                ayatBetulHTML: '<span class="serlah-betul">Ali pergi ke sekolah</span> setiap hari.',
+                ayatBetulTeks: 'Ali pergi ke sekolah setiap hari.',
+                penerangan: 'Susunan ayat penyata yang biasa hendaklah dimulakan dengan subjek (Ali) diikuti oleh predikat (pergi ke sekolah setiap hari).',
+                contohTambahan: 'Ayah memandu kereta ke pejabat pada setiap pagi.'
+            },
+            {
+                id: 20, kategoriId: 4,
+                ayatSalahHTML: '<span class="serlah-salah">Buku membaca adik</span> di ruang tamu.',
+                ayatSalahTeks: 'Buku membaca adik di ruang tamu.',
+                ayatBetulHTML: '<span class="serlah-betul">Adik membaca buku</span> di ruang tamu.',
+                ayatBetulTeks: 'Adik membaca buku di ruang tamu.',
+                penerangan: 'Struktur ayat aktif mesti dimulakan dengan pelaku/subjek (Adik), diikuti kata kerja (membaca) dan objek (buku).',
+                contohTambahan: 'Kucing itu menangkap seekor tikus di dapur.'
+            },
+            {
+                id: 21, kategoriId: 4,
+                ayatSalahHTML: 'Surat itu <span class="serlah-salah">saya telah baca</span> semalam.',
+                ayatSalahTeks: 'Surat itu saya telah baca semalam.',
+                ayatBetulHTML: 'Surat itu <span class="serlah-betul">telah saya baca</span> semalam.',
+                ayatBetulTeks: 'Surat itu telah saya baca semalam.',
+                penerangan: 'Dalam ayat pasif ganti nama diri pertama (saya), kata bantu "telah" mesti diletakkan di hadapan kata ganti nama diri (telah saya baca).',
+                contohTambahan: 'Kek coklat itu sudah kami makan hingga habis.'
+            },
+            {
+                id: 22, kategoriId: 4,
+                ayatSalahHTML: 'Bola sepak itu <span class="serlah-salah">ditendang oleh saya</span> dengan kuat.',
+                ayatSalahTeks: 'Bola sepak itu ditendang oleh saya dengan kuat.',
+                ayatBetulHTML: 'Bola sepak itu <span class="serlah-betul">saya tendang</span> dengan kuat.',
+                ayatBetulTeks: 'Bola sepak itu saya tendang dengan kuat.',
+                penerangan: 'Kata ganti nama diri pertama (saya, aku, kami, kita) tidak boleh menggunakan imbuhan "di-... oleh". Gunakan bentuk "saya tendang".',
+                contohTambahan: 'Buku cerita yang menarik itu saya pinjam dari perpustakaan.'
+            },
+            {
+                id: 23, kategoriId: 4,
+                ayatSalahHTML: '<span class="serlah-salah">Di atas meja buku itu terletak</span> dengan kemas.',
+                ayatSalahTeks: 'Di atas meja buku itu terletak dengan kemas.',
+                ayatBetulHTML: '<span class="serlah-betul">Buku itu terletak di atas meja</span> dengan kemas.',
+                ayatBetulTeks: 'Buku itu terletak di atas meja dengan kemas.',
+                penerangan: 'Subjek ayat (Buku itu) perlu diletakkan di hadapan predikat (terletak di atas meja) supaya maksud ayat jelas dan teratur.',
+                contohTambahan: 'Pasu bunga yang cantik itu diletakkan di sudut ruang tamu.'
+            },
+            {
+                id: 24, kategoriId: 4,
+                ayatSalahHTML: 'Ibu bapa <span class="serlah-salah">sayang anak-anak</span> mereka.',
+                ayatSalahTeks: 'Ibu bapa sayang anak-anak mereka.',
+                ayatBetulHTML: 'Ibu bapa <span class="serlah-betul">menyayangi anak-anak</span> mereka.',
+                ayatBetulTeks: 'Ibu bapa menyayangi anak-anak mereka.',
+                penerangan: 'Kata adjektif "sayang" memerlukan imbuhan apitan "meN-...-i" (menyayangi) apabila diikuti secara langsung oleh objek (anak-anak).',
+                contohTambahan: 'Kita mesti menghormati dan menyayangi kedua-dua ibu bapa kita.'
+            },
+
+            // --- KATEGORI 5: KESALAHAN KATA GANDA DAN KATA PENGUAT (6 KAD) ---
+            {
+                id: 25, kategoriId: 5,
+                ayatSalahHTML: '<span class="serlah-salah">Para-para murid</span> sedang belajar di dalam kelas.',
+                ayatSalahTeks: 'Para-para murid sedang belajar di dalam kelas.',
+                ayatBetulHTML: '<span class="serlah-betul">Para murid</span> sedang belajar di dalam kelas.',
+                ayatBetulTeks: 'Para murid sedang belajar di dalam kelas.',
+                penerangan: 'Perkataan "para" sudah membawa maksud ramai (jamak), maka tidak boleh digandakan menjadi "para-para" (para-para bermaksud rak kayu).',
+                contohTambahan: 'Para tetamu dipersilakan duduk di dalam dewan.'
+            },
+            {
+                id: 26, kategoriId: 5,
+                ayatSalahHTML: 'Dia murid yang <span class="serlah-salah">paling tertinggi</span> di dalam kelas.',
+                ayatSalahTeks: 'Dia murid yang paling tertinggi di dalam kelas.',
+                ayatBetulHTML: 'Dia murid yang <span class="serlah-betul">paling tinggi</span> di dalam kelas.',
+                ayatBetulTeks: 'Dia murid yang paling tinggi di dalam kelas.',
+                penerangan: 'Kata penguat "paling" tidak boleh digabungkan dengan kata adjektif berimbuhan awalan "ter-" (tertinggi). Gunakan "paling tinggi" atau "tertinggi".',
+                contohTambahan: 'Gunung Kinabalu ialah gunung yang paling tinggi di Malaysia.'
+            },
+            {
+                id: 27, kategoriId: 5,
+                ayatSalahHTML: 'Semua <span class="serlah-salah">pelajar-pelajar</span> beratur di tapak perhimpunan.',
+                ayatSalahTeks: 'Semua pelajar-pelajar beratur di tapak perhimpunan.',
+                ayatBetulHTML: 'Semua <span class="serlah-betul">pelajar</span> beratur di tapak perhimpunan.',
+                ayatBetulTeks: 'Semua pelajar beratur di tapak perhimpunan.',
+                penerangan: 'Apabila kata bilangan jamak seperti "semua" digunakan, kata nama selepasnya (pelajar) tidak perlu digandakan lagi.',
+                contohTambahan: 'Semua guru berkumpul di bilik mesyuarat pada waktu rehat.'
+            },
+            {
+                id: 28, kategoriId: 5,
+                ayatSalahHTML: 'Banyak <span class="serlah-salah">pokok-pokok</span> bunga ditanam di taman sekolah.',
+                ayatSalahTeks: 'Banyak pokok-pokok bunga ditanam di taman sekolah.',
+                ayatBetulHTML: 'Banyak <span class="serlah-betul">pokok</span> bunga ditanam di taman sekolah.',
+                ayatBetulTeks: 'Banyak pokok bunga ditanam di taman sekolah.',
+                penerangan: 'Perkataan "banyak" sudah menunjukkan bilangan yang melebihi satu, jadi kata nama "pokok" tidak perlu digandakan.',
+                contohTambahan: 'Banyak orang berkunjung ke pesta buku pada hujung minggu.'
+            },
+            {
+                id: 29, kategoriId: 5,
+                ayatSalahHTML: 'Pemandangan di kampung datuk <span class="serlah-salah">amat</span> indah <span class="serlah-salah">nian</span>.',
+                ayatSalahTeks: 'Pemandangan di kampung datuk amat indah nian.',
+                ayatBetulHTML: 'Pemandangan di kampung datuk <span class="serlah-betul">amat indah</span>.',
+                ayatBetulTeks: 'Pemandangan di kampung datuk amat indah.',
+                penerangan: 'Kata penguat "amat" dan "nian" tidak boleh hadir bersama-sama dalam satu frasa adjektif. Pilih salah satu sahaja.',
+                contohTambahan: 'Suasana di tepi pantai pada waktu senja amat tenang.'
+            },
+            {
+                id: 30, kategoriId: 5,
+                ayatSalahHTML: 'Kuih-muih yang dijual di gerai itu <span class="serlah-salah">sungguh</span> sedap <span class="serlah-salah">sekali</span>.',
+                ayatSalahTeks: 'Kuih-muih yang dijual di gerai itu sungguh sedap sekali.',
+                ayatBetulHTML: 'Kuih-muih yang dijual di gerai itu <span class="serlah-betul">sungguh sedap</span>.',
+                ayatBetulTeks: 'Kuih-muih yang dijual di gerai itu sungguh sedap.',
+                penerangan: 'Kata penguat "sungguh" dan "sekali" tidak boleh digunakan secara serentak. Gunakan "sungguh sedap" atau "sedap sekali".',
+                contohTambahan: 'Nasi lemak masakan ibu sungguh enak dan beraroma.'
+            }
+        ];
+
+        /* ==========================================================================
+           2. PEMBOLEH UBAH KEADAAN APLIKASI (STATE)
+           ========================================================================== */
+        let kadSemasaSenarai = [...SENARAI_KAD];
+        let indeksKadSemasa = 0;
+        let keadaanTerbalik = false;
+        let setKadDipelajari = new Set();
+        let kategoriAktifId = null; // null bermaksud semua kategori
+
+        // Pemboleh ubah Kuiz Mini
+        let soalanKuizSenarai = [];
+        let indeksSoalanKuiz = 0;
+        let markahKuiz = 0;
+        let sudahJawabSoalanIni = false;
+
+        /* ==========================================================================
+           3. KESAN BUNYI CERIA TANPA FAIL LUAR (WEB AUDIO API)
+           ========================================================================== */
+        function mainkanBunyi(jenis) {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                const masa = ctx.currentTime;
+                if (jenis === 'pusing') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(340, masa);
+                    osc.frequency.exponentialRampToValueAtTime(560, masa + 0.14);
+                    gain.gain.setValueAtTime(0.12, masa);
+                    gain.gain.exponentialRampToValueAtTime(0.01, masa + 0.15);
+                    osc.start(masa);
+                    osc.stop(masa + 0.15);
+                } else if (jenis === 'betul') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, masa); // C5
+                    osc.frequency.setValueAtTime(659.25, masa + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, masa + 0.2); // G5
+                    gain.gain.setValueAtTime(0.16, masa);
+                    gain.gain.exponentialRampToValueAtTime(0.01, masa + 0.35);
+                    osc.start(masa);
+                    osc.stop(masa + 0.35);
+                } else if (jenis === 'salah') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(240, masa);
+                    osc.frequency.linearRampToValueAtTime(170, masa + 0.25);
+                    gain.gain.setValueAtTime(0.1, masa);
+                    gain.gain.exponentialRampToValueAtTime(0.01, masa + 0.26);
+                    osc.start(masa);
+                    osc.stop(masa + 0.26);
+                }
+            } catch (e) {
+                // Abaikan jika pelayar menyekat audio automatik
+            }
+        }
+
+        /* ==========================================================================
+           4. NAVIGASI PAPARAN & MODAL
+           ========================================================================== */
+        function tunjukPaparan(idPaparan) {
+            document.querySelectorAll('.paparan').forEach(el => {
+                el.classList.remove('aktif');
+            });
+            const sasaran = document.getElementById(idPaparan);
+            if (sasaran) {
+                sasaran.classList.add('aktif');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function bukaPanduan() {
+            document.getElementById('modal-panduan').classList.add('terbuka');
+        }
+
+        function tutupPanduan() {
+            document.getElementById('modal-panduan').classList.remove('terbuka');
+        }
+
+        /* ==========================================================================
+           5. PENJANAAN SENARAI KATEGORI
+           ========================================================================== */
+        function binaGridKategori() {
+            const bekas = document.getElementById('senarai-kategori-grid');
+            bekas.innerHTML = '';
+
+            // Kad pilihan Semua Kategori (30 Kad)
+            const kadSemua = document.createElement('div');
+            kadSemua.className = 'kad-pilihan-kategori kat-semua';
+            kadSemua.innerHTML = `
+                <span class="nombor-kat">🌟 SEMUA MISI</span>
+                <div class="nama-kat">SEMUA KATEGORI TATABAHASA</div>
+                <div class="bilangan-kad-kat">30 Kad Lengkap • Gabungan 5 Kategori</div>
+            `;
+            kadSemua.onclick = () => mulaBelajarSemua();
+            bekas.appendChild(kadSemua);
+
+            // 5 Kategori Khusus
+            DATA_KATEGORI.forEach(kat => {
+                const jumlahKad = SENARAI_KAD.filter(k => k.kategoriId === kat.id).length;
+                const el = document.createElement('div');
+                el.className = `kad-pilihan-kategori ${kat.kod}`;
+                el.innerHTML = `
+                    <span class="nombor-kat">${kat.ikon} ${jumlahKad} KAD</span>
+                    <div class="nama-kat">${kat.nama}</div>
+                    <div class="bilangan-kad-kat">${kat.peneranganRingkas}</div>
+                `;
+                el.onclick = () => mulaBelajarKategori(kat.id);
+                bekas.appendChild(el);
+            });
+        }
+
+        /* ==========================================================================
+           6. FUNGSI UTAMA FLASHCARD INTERAKTIF
+           ========================================================================== */
+        function mulaBelajarSemua() {
+            kategoriAktifId = null;
+            kadSemasaSenarai = [...SENARAI_KAD];
+            indeksKadSemasa = 0;
+            setKadDipelajari.clear();
+            paparKadSemasa();
+            tunjukPaparan('paparan-kad');
+        }
+
+        function mulaBelajarKategori(idKategori) {
+            kategoriAktifId = idKategori;
+            kadSemasaSenarai = SENARAI_KAD.filter(k => k.kategoriId === idKategori);
+            indeksKadSemasa = 0;
+            setKadDipelajari.clear();
+            paparKadSemasa();
+            tunjukPaparan('paparan-kad');
+        }
+
+        function paparKadSemasa() {
+            const kad = kadSemasaSenarai[indeksKadSemasa];
+            if (!kad) return;
+
+            // Reset keadaan pusingan kepada bahagian hadapan
+            keadaanTerbalik = false;
+            const elemenKad = document.getElementById('kad-interaktif');
+            elemenKad.classList.remove('diterbalikkan', 'posisi-relatif-belakang');
+            elemenKad.classList.add('posisi-relatif-hadapan');
+
+            // Dapatkan nama kategori
+            const infoKat = DATA_KATEGORI.find(k => k.id === kad.kategoriId);
+            const labelKategori = infoKat ? `${infoKat.ikon} ${infoKat.nama}` : 'Tatabahasa';
+
+            // Isi Bahagian Hadapan
+            document.getElementById('kad-kategori-hadapan').textContent = labelKategori;
+            document.getElementById('teks-ayat-salah').innerHTML = kad.ayatSalahHTML;
+
+            // Isi Bahagian Belakang
+            document.getElementById('kad-kategori-belakang').textContent = labelKategori;
+            document.getElementById('teks-ayat-betul').innerHTML = kad.ayatBetulHTML;
+            document.getElementById('teks-penerangan').innerHTML = `<strong>💡 Mengapa salah?</strong><br>${kad.penerangan}`;
+            document.getElementById('teks-contoh-tambahan').innerHTML = `<strong>✨ Contoh ayat betul lain:</strong> ${kad.contohTambahan}`;
+
+            // Kemas kini paparan nombor kad & bar kemajuan
+            const jumlah = kadSemasaSenarai.length;
+            const nomborSekarang = indeksKadSemasa + 1;
+            document.getElementById('label-nombor-kad').textContent = `Kad ${nomborSekarang} / ${jumlah}`;
+            document.getElementById('label-dipelajari').textContent = `Dipelajari: ${setKadDipelajari.size} / ${jumlah}`;
+
+            const peratus = Math.round((nomborSekarang / jumlah) * 100);
+            document.getElementById('bar-kemajuan-isi').style.width = `${peratus}%`;
+
+            // Kawal keadaan butang Sebelum & Seterusnya
+            document.getElementById('butang-sebelum').disabled = (indeksKadSemasa === 0);
+            document.getElementById('butang-sebelum').style.opacity = (indeksKadSemasa === 0) ? '0.5' : '1';
+
+            const butangSeterusnya = document.getElementById('butang-seterusnya');
+            const butangKuiz = document.getElementById('butang-tamat-ke-kuiz');
+
+            if (indeksKadSemasa === jumlah - 1) {
+                butangSeterusnya.style.display = 'none';
+                butangKuiz.style.display = 'inline-flex';
+            } else {
+                butangSeterusnya.style.display = 'inline-flex';
+                butangKuiz.style.display = 'none';
+            }
+        }
+
+        function terbalikkanKad() {
+            mainkanBunyi('pusing');
+            const elemenKad = document.getElementById('kad-interaktif');
+            keadaanTerbalik = !keadaanTerbalik;
+
+            if (keadaanTerbalik) {
+                elemenKad.classList.add('diterbalikkan');
+                elemenKad.classList.remove('posisi-relatif-hadapan');
+                elemenKad.classList.add('posisi-relatif-belakang');
+
+                // Tandakan kad ini sebagai telah dipelajari apabila murid melihat jawapan
+                const kad = kadSemasaSenarai[indeksKadSemasa];
+                if (kad) {
+                    setKadDipelajari.add(kad.id);
+                    document.getElementById('label-dipelajari').textContent =
+                        `Dipelajari: ${setKadDipelajari.size} / ${kadSemasaSenarai.length}`;
+                }
+            } else {
+                elemenKad.classList.remove('diterbalikkan');
+                elemenKad.classList.remove('posisi-relatif-belakang');
+                elemenKad.classList.add('posisi-relatif-hadapan');
+            }
+        }
+
+        function kadSeterusnya() {
+            if (indeksKadSemasa < kadSemasaSenarai.length - 1) {
+                indeksKadSemasa++;
+                paparKadSemasa();
+            }
+        }
+
+        function kadSebelumnya() {
+            if (indeksKadSemasa > 0) {
+                indeksKadSemasa--;
+                paparKadSemasa();
+            }
+        }
+
+        function acakSusunanKad() {
+            // Algoritma Fisher-Yates untuk mengacak kad secara adil
+            for (let i = kadSemasaSenarai.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [kadSemasaSenarai[i], kadSemasaSenarai[j]] = [kadSemasaSenarai[j], kadSemasaSenarai[i]];
+            }
+            indeksKadSemasa = 0;
+            mainkanBunyi('pusing');
+            paparKadSemasa();
+        }
+
+        function ulangKadSemasa() {
+            indeksKadSemasa = 0;
+            setKadDipelajari.clear();
+            mainkanBunyi('pusing');
+            paparKadSemasa();
+        }
+
+        /* ==========================================================================
+           7. AKTIVITI PENGUKUHAN: KUIZ MINI (10 SOALAN)
+           ========================================================================== */
+        const BANK_SOALAN_KUIZ = [
+            {
+                ayatSalah: "Ali sangat pandai sekali.",
+                pilihan: [
+                    "Ali sangat pandai.",
+                    "Ali teramat pandai sekali.",
+                    "Ali paling pandai sekali.",
+                    "Ali sangat terpandai."
+                ],
+                jawapanBetul: 0,
+                penerangan: "Kata penguat 'sangat' dan 'sekali' tidak boleh digunakan serentak."
+            },
+            {
+                ayatSalah: "Mereka-mereka sedang bermain bola di padang.",
+                pilihan: [
+                    "Semua mereka-mereka sedang bermain bola di padang.",
+                    "Mereka sedang bermain bola di padang.",
+                    "Para mereka sedang bermain bola di padang.",
+                    "Mereka semua-semua sedang bermain bola di padang."
+                ],
+                jawapanBetul: 1,
+                penerangan: "'Mereka' sudah membawa maksud jamak (ramai) dan tidak boleh digandakan."
+            },
+            {
+                ayatSalah: "Saya berasal daripada Tampin.",
+                pilihan: [
+                    "Saya berasal ke Tampin.",
+                    "Saya berasal pada Tampin.",
+                    "Saya berasal dari Tampin.",
+                    "Saya berasal kepada Tampin."
+                ],
+                jawapanBetul: 2,
+                penerangan: "Kata sendi nama 'dari' digunakan untuk menyatakan tempat atau asal negeri."
+            },
+            {
+                ayatSalah: "Buku cerita itu ada di Cikgu Amina.",
+                pilihan: [
+                    "Buku cerita itu ada ke Cikgu Amina.",
+                    "Buku cerita itu ada dari Cikgu Amina.",
+                    "Buku cerita itu ada di atas Cikgu Amina.",
+                    "Buku cerita itu ada pada Cikgu Amina."
+                ],
+                jawapanBetul: 3,
+                penerangan: "Kata sendi nama 'pada' digunakan untuk manusia atau haiwan, bukannya 'di'."
+            },
+            {
+                ayatSalah: "Walaupun hujan tetapi mereka tetap bermain.",
+                pilihan: [
+                    "Walaupun hujan, mereka tetap bermain.",
+                    "Walaupun hujan namun mereka tetap bermain.",
+                    "Meskipun hujan tetapi mereka tetap bermain.",
+                    "Sungguhpun hujan melainkan mereka tetap bermain."
+                ],
+                jawapanBetul: 0,
+                penerangan: "Kata hubung 'walaupun' tidak boleh dipasangkan dengan 'tetapi' dalam ayat yang sama."
+            },
+            {
+                ayatSalah: "Oleh kerana hujan lebat, kami tidak keluar bermain.",
+                pilihan: [
+                    "Oleh kerana hujan lebat maka kami tidak keluar bermain.",
+                    "Oleh sebab hujan lebat, kami tidak keluar bermain.",
+                    "Sebab kerana hujan lebat, kami tidak keluar bermain.",
+                    "Kerana sebab hujan lebat, kami tidak keluar bermain."
+                ],
+                jawapanBetul: 1,
+                penerangan: "Bentuk tatabahasa yang baku dan tepat ialah 'oleh sebab', bukan 'oleh kerana'."
+            },
+            {
+                ayatSalah: "Ke sekolah Ali pergi setiap hari.",
+                pilihan: [
+                    "Pergi ke sekolah Ali setiap hari.",
+                    "Sekolah ke Ali pergi setiap hari.",
+                    "Ali pergi ke sekolah setiap hari.",
+                    "Setiap hari ke sekolah Ali pergi."
+                ],
+                jawapanBetul: 2,
+                penerangan: "Susunan ayat penyata yang betul bermula dengan subjek (Ali) diikuti predikat (pergi ke sekolah)."
+            },
+            {
+                ayatSalah: "Surat itu saya telah baca semalam.",
+                pilihan: [
+                    "Surat itu dibaca oleh saya semalam.",
+                    "Surat itu saya sudah baca semalam.",
+                    "Surat itu saya akan baca semalam.",
+                    "Surat itu telah saya baca semalam."
+                ],
+                jawapanBetul: 3,
+                penerangan: "Kata bantu 'telah' perlu diletakkan di hadapan kata ganti nama diri pertama (telah saya baca)."
+            },
+            {
+                ayatSalah: "Para-para murid sedang belajar di dalam kelas.",
+                pilihan: [
+                    "Para murid sedang belajar di dalam kelas.",
+                    "Para-para murid-murid sedang belajar di dalam kelas.",
+                    "Semua para murid sedang belajar di dalam kelas.",
+                    "Para semua murid sedang belajar di dalam kelas."
+                ],
+                jawapanBetul: 0,
+                penerangan: "'Para' sudah bermaksud ramai, jadi tidak boleh digandakan menjadi 'para-para'."
+            },
+            {
+                ayatSalah: "Dia murid yang paling tertinggi dalam kelas.",
+                pilihan: [
+                    "Dia murid yang amat tertinggi dalam kelas.",
+                    "Dia murid yang paling tinggi dalam kelas.",
+                    "Dia murid yang sungguh tertinggi dalam kelas.",
+                    "Dia murid yang paling tinggi sekali dalam kelas."
+                ],
+                jawapanBetul: 1,
+                penerangan: "Kata penguat 'paling' tidak boleh diikuti oleh kata adjektif berimbuhan 'ter-'."
+            }
+        ];
+
+        function mulaKuiz() {
+            // Salin dan acak urutan 10 soalan kuiz
+            soalanKuizSenarai = [...BANK_SOALAN_KUIZ];
+            for (let i = soalanKuizSenarai.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [soalanKuizSenarai[i], soalanKuizSenarai[j]] = [soalanKuizSenarai[j], soalanKuizSenarai[i]];
+            }
+
+            indeksSoalanKuiz = 0;
+            markahKuiz = 0;
+
+            document.getElementById('ruang-soalan-kuiz').style.display = 'block';
+            document.getElementById('ruang-keputusan-kuiz').style.display = 'none';
+            document.getElementById('paparan-markah-semasa').textContent = 'Markah: 0';
+
+            paparSoalanKuiz();
+            tunjukPaparan('paparan-kuiz');
+        }
+
+        function paparSoalanKuiz() {
+            sudahJawabSoalanIni = false;
+            const soalan = soalanKuizSenarai[indeksSoalanKuiz];
+
+            document.getElementById('status-soalan-kuiz').textContent =
+                `Soalan ${indeksSoalanKuiz + 1} daripada ${soalanKuizSenarai.length}`;
+            document.getElementById('kuiz-ayat-salah').textContent = `❌ "${soalan.ayatSalah}"`;
+
+            const bekasPilihan = document.getElementById('senarai-pilihan-jawapan');
+            bekasPilihan.innerHTML = '';
+
+            const hurufLabel = ['A', 'B', 'C', 'D'];
+            soalan.pilihan.forEach((teksPilihan, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'butang-pilihan';
+                btn.innerHTML = `
+                    <span class="huruf-pilihan">${hurufLabel[idx]}</span>
+                    <span>${teksPilihan}</span>
+                `;
+                btn.onclick = () => semakJawapanKuiz(idx, btn);
+                bekasPilihan.appendChild(btn);
+            });
+
+            const kotakMaklumBalas = document.getElementById('maklum-balas-kuiz');
+            kotakMaklumBalas.className = 'maklum-balas-kuiz';
+            kotakMaklumBalas.innerHTML = '';
+
+            document.getElementById('butang-soalan-seterusnya').style.display = 'none';
+        }
+
+        function semakJawapanKuiz(indeksDipilih, butangDipilih) {
+            if (sudahJawabSoalanIni) return;
+            sudahJawabSoalanIni = true;
+
+            const soalan = soalanKuizSenarai[indeksSoalanKuiz];
+            const semuaButang = document.querySelectorAll('#senarai-pilihan-jawapan .butang-pilihan');
+            const kotakMaklumBalas = document.getElementById('maklum-balas-kuiz');
+
+            semuaButang.forEach(b => b.disabled = true);
+
+            if (indeksDipilih === soalan.jawapanBetul) {
+                butangDipilih.classList.add('pilihan-betul');
+                markahKuiz += 10;
+                document.getElementById('paparan-markah-semasa').textContent = `Markah: ${markahKuiz}`;
+                mainkanBunyi('betul');
+
+                kotakMaklumBalas.className = 'maklum-balas-kuiz betul';
+                kotakMaklumBalas.innerHTML = `<strong>🎉 Syabas! Jawapan kamu BETUL (+10 markah)!</strong><br>${soalan.penerangan}`;
+            } else {
+                butangDipilih.classList.add('pilihan-salah');
+                semuaButang[soalan.jawapanBetul].classList.add('pilihan-betul');
+                mainkanBunyi('salah');
+
+                kotakMaklumBalas.className = 'maklum-balas-kuiz salah';
+                kotakMaklumBalas.innerHTML = `<strong>💡 Hampir tepat! Cuba lagi pada soalan seterusnya.</strong><br>Jawapan betul: <strong>${soalan.pilihan[soalan.jawapanBetul]}</strong>.<br>${soalan.penerangan}`;
+            }
+
+            const butangNext = document.getElementById('butang-soalan-seterusnya');
+            butangNext.textContent = (indeksSoalanKuiz === soalanKuizSenarai.length - 1)
+                ? '🏁 LIHAT KEPUTUSAN'
+                : 'SOALAN SETERUSNYA ➡️';
+            butangNext.style.display = 'inline-flex';
+        }
+
+        function soalanKuizSeterusnya() {
+            if (indeksSoalanKuiz < soalanKuizSenarai.length - 1) {
+                indeksSoalanKuiz++;
+                paparSoalanKuiz();
+            } else {
+                paparKeputusanKuiz();
+            }
+        }
+
+        function paparKeputusanKuiz() {
+            document.getElementById('ruang-soalan-kuiz').style.display = 'none';
+            document.getElementById('ruang-keputusan-kuiz').style.display = 'block';
+            document.getElementById('skor-akhir-kuiz').textContent = `${markahKuiz} / 100`;
+
+            const galakanEl = document.getElementById('teks-kata-galakan');
+            const ikonEl = document.getElementById('ikon-ganjaran-kuiz');
+            const ulasanEl = document.getElementById('ulasan-skor-kuiz');
+
+            if (markahKuiz >= 80) {
+                ikonEl.textContent = '🏆🌟🎉';
+                galakanEl.textContent = 'Hebat!';
+                ulasanEl.textContent = 'Cemerlang! Kamu memang pakar tatabahasa Bahasa Melayu!';
+                mainkanBunyi('betul');
+            } else if (markahKuiz >= 50) {
+                ikonEl.textContent = '⭐⭐👏';
+                galakanEl.textContent = 'Syabas!';
+                ulasanEl.textContent = 'Bagus! Kamu sudah memahami banyak kesalahan ayat. Ulang kaji sedikit lagi untuk markah penuh!';
+                mainkanBunyi('betul');
+            } else {
+                ikonEl.textContent = '💪📚🌈';
+                galakanEl.textContent = 'Teruskan Usaha!';
+                ulasanEl.textContent = 'Jangan berputus asa! Jom baca semula kad pembelajaran dan cuba kuiz ini sekali lagi.';
+            }
+        }
+
+        /* ==========================================================================
+           8. PEMULAAN APLIKASI APABILA HALAMAN DIMUATKAN
+           ========================================================================== */
+        window.onload = function () {
+            binaGridKategori();
+        };
+    </script>
+</body>
+</html>
